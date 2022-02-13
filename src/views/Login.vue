@@ -40,6 +40,7 @@ export default {
             console.log(res)
             const { token, expired } = res.data
             document.cookie = `hexToken=${token}; expires=${new Date(expired)}`
+            this.$router.push('/dashbord/products')
           }
         })
         .catch((err) => {
