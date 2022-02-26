@@ -207,6 +207,21 @@ export default {
     },
     hideModal () {
       this.modal.hide()
+    },
+    uploadFile () {
+      // 取得檔案
+      const uploadedFile = this.$refs.fileInput.files[0]
+      console.dir(uploadedFile)
+      const formData = new FormData()
+      formData.append('file-to-upload', uploadedFile)
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/upload`
+      this.$http.post(api, formData)
+        .then((res) => {
+          if (res.success) {
+            this.tempProduct.imageUrl = res.data.imageUrl
+          }
+          console.log(res)
+        })
     }
   },
   mounted () {

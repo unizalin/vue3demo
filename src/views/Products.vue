@@ -26,16 +26,18 @@
         <td>
           <div class="btn-group">
             <button class="btn btn-outline-primary btn-sm" @click="openModal(false,product)">編輯</button>
-            <button class="btn btn-outline-danger btn-sm">刪除</button>
+            <button class="btn btn-outline-danger btn-sm" @click="dalModal(product)">刪除</button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
   <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"></ProductModal>
+  <DelModal ref="delModal" :product="tempProduct"></DelModal>
 </template>
 <script>
 import ProductModal from '../components/ProductModal.vue'
+import DelModal from '../components/DelModal.vue'
 export default {
   data () {
     return {
@@ -46,7 +48,8 @@ export default {
     }
   },
   components: {
-    ProductModal
+    ProductModal,
+    DelModal
   },
   methods: {
     openModal (isNew, item) {
@@ -58,6 +61,12 @@ export default {
       this.isNew = isNew
       const productComponent = this.$refs.productModal
       productComponent.showModal()
+    },
+    dalModal (item) {
+      this.tempProduct = { ...item }
+      // this.$refs 直接取代 ＄()
+      const delComponent = this.$refs.delModal
+      delComponent.showModal()
     },
     getProducts () {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products`
