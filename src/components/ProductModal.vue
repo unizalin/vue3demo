@@ -184,23 +184,6 @@
 <script>
 import modalMixin from '@/mixins/mixinModal'
 export default {
-  props: {
-    product: {
-      type: Object,
-      default () { return {} }
-    }
-  },
-  watch: {
-    product () {
-      this.tempProduct = this.product
-    }
-  },
-  data () {
-    return {
-      modal: { },
-      tempProduct: {}
-    }
-  },
   methods: {
     uploadFile () {
       // 取得檔案

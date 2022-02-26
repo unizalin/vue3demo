@@ -1,4 +1,5 @@
 <template>
+  <Loading :active="isLoading"></Loading>
   <div class="text-end">
     <button class="btn bnt-primary" type="button" @click="openModal(true)"> 增加一個</button>
   </div>
@@ -44,7 +45,8 @@ export default {
       products: [],
       pagination: {},
       tempProduct: {},
-      isNew: false
+      isNew: false,
+      isLoading: false
     }
   },
   components: {
@@ -70,13 +72,14 @@ export default {
     },
     getProducts () {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products`
-
+      this.isLoading = true
       this.$http.get(api)
         .then((res) => {
           if (res.data.success) {
-            console.log(res.data)
+            // console.log(res.data)
             this.products = res.data.products
             this.pagination = res.data.pagination
+            this.isLoading = false
           }
         })
     },
@@ -91,12 +94,14 @@ export default {
         httpMethod = 'put'
       }
       const productComponent = this.$refs.productModal
+      this.isLoading = true
 
       this.$http[httpMethod](api, { data: this.tempProduct })
         .then((res) => {
           console.log(res)
           productComponent.hideModal()
           this.getProducts()
+          this.isLoading = false
         })
     }
   },

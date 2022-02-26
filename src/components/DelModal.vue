@@ -36,23 +36,6 @@
 <script>
 import modalMixin from '@/mixins/mixinModal'
 export default {
-  props: {
-    product: {
-      type: Object,
-      default () { return {} }
-    }
-  },
-  watch: {
-    product () {
-      this.tempProduct = this.product
-    }
-  },
-  data () {
-    return {
-      modal: { },
-      tempProduct: {}
-    }
-  },
   methods: {
     delModal (id) {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${id}`
