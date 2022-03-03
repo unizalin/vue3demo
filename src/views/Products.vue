@@ -35,10 +35,13 @@
   </table>
   <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"></ProductModal>
   <DelModal ref="delModal" :product="tempProduct"></DelModal>
+  <Pagination :pages="pagination" @emit-pages="getProducts"></Pagination>
+  {{pagination}}
 </template>
 <script>
 import ProductModal from '../components/ProductModal.vue'
 import DelModal from '../components/DelModal.vue'
+import Pagination from '../components/Pagination.vue'
 export default {
   data () {
     return {
@@ -51,7 +54,8 @@ export default {
   },
   components: {
     ProductModal,
-    DelModal
+    DelModal,
+    Pagination
   },
   inject: ['emitter'],
   methods: {
@@ -71,13 +75,13 @@ export default {
       const delComponent = this.$refs.delModal
       delComponent.showModal()
     },
-    getProducts () {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products`
+    getProducts (page = 1) {
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`
       this.isLoading = true
       this.$http.get(api)
         .then((res) => {
           if (res.data.success) {
-            // console.log(res.data)
+            console.log(res.data)
             this.products = res.data.products
             this.pagination = res.data.pagination
             this.isLoading = false
@@ -102,6 +106,7 @@ export default {
           console.log(res)
           productComponent.hideModal()
           if (res.data.success) {
+            console.log('success true')
             this.getProducts()
             this.emitter.emit('push-message', {
               style: 'success',
