@@ -1,7 +1,7 @@
 <template>
   <Loading :active="isLoading"></Loading>
   <div class="text-end">
-    <button class="btn bnt-primary" type="button" @click="openModal(true)"> 增加一個</button>
+    <button class="btn  btn-primary" type="button" @click="openModal(true)"> 增加一個</button>
   </div>
   <table class="table mt-4">
     <thead>
@@ -15,11 +15,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="(product , idx) in products" :key="idx">
+      <tr v-for="(product , idx) in productsPage" :key="idx">
         <td>{{product.category}}</td>
-        <td>{{product.content}}</td>
-        <td class="text-right">{{product.origin_price}}</td>
-        <td class="text-right">{{product.price}}</td>
+        <td>{{product.title}}</td>
+        <td class="text-right">{{$filters.currency(product.origin_price)}}</td>
+        <td class="text-right">{{$filters.currency(product.price)}}</td>
         <td>
           <span class="text-success" v-if="product.is_enabled">啟用</span>
           <span class="text-success" v-else>未啟用</span>
@@ -35,21 +35,20 @@
   </table>
   <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"></ProductModal>
   <DelModal ref="delModal" :product="tempProduct"></DelModal>
-  <Pagination :pages="pagination" @emit-pages="getProducts"></Pagination>
-  {{pagination}}
+  <Pagination v-if="pagination" :pages="pagination" @emit-pages="getProductPage"></Pagination>
 </template>
 <script>
 import ProductModal from '../components/ProductModal.vue'
 import DelModal from '../components/DelModal.vue'
 import Pagination from '../components/Pagination.vue'
+import { mapActions, mapState } from 'pinia'
+import productsStore from '../stores/productsStore'
+import statusStore from '../stores/statusStore'
 export default {
   data () {
     return {
-      products: [],
-      pagination: {},
       tempProduct: {},
-      isNew: false,
-      isLoading: false
+      isNew: false
     }
   },
   components: {
@@ -58,8 +57,14 @@ export default {
     Pagination
   },
   inject: ['emitter'],
+  computed: {
+    ...mapState(productsStore, ['productsPage', 'pagination']),
+    ...mapState(statusStore, ['isLoading'])
+  },
   methods: {
+    ...mapActions(productsStore, ['getProductPage']),
     openModal (isNew, item) {
+      console.log(isNew, item)
       if (this.isNew) {
         this.tempProduct = {}
       } else {
@@ -75,21 +80,9 @@ export default {
       const delComponent = this.$refs.delModal
       delComponent.showModal()
     },
-    getProducts (page = 1) {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`
-      this.isLoading = true
-      this.$http.get(api)
-        .then((res) => {
-          if (res.data.success) {
-            console.log(res.data)
-            this.products = res.data.products
-            this.pagination = res.data.pagination
-            this.isLoading = false
-          }
-        })
-    },
     updateProduct (item) {
       console.log(item)
+      // 新增方式
       this.tempProduct = item
       let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`
       let httpMethod = 'post'
@@ -100,14 +93,13 @@ export default {
       }
       const productComponent = this.$refs.productModal
       this.isLoading = true
-
       this.$http[httpMethod](api, { data: this.tempProduct })
         .then((res) => {
           console.log(res)
           productComponent.hideModal()
           if (res.data.success) {
             console.log('success true')
-            this.getProducts()
+            this.getProductPage()
             this.emitter.emit('push-message', {
               style: 'success',
               title: '更新成功'
@@ -124,7 +116,7 @@ export default {
     }
   },
   created () {
-    this.getProducts()
+    this.getProductPage()
   }
 }
 </script>

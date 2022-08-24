@@ -7,21 +7,17 @@
 </template>
 
 <script>
+import { storeToRefs } from 'pinia'
 import Toast from '@/components/Toast.vue'
+import statusStore from '@/stores/statusStore'
 export default {
   components: { Toast },
-  data () {
+  setup () {
+    const status = statusStore()
+    const { messages } = storeToRefs(status)
     return {
-      messages: []
+      messages
     }
-  },
-  inject: ['emitter'],
-  mounted () {
-    this.emitter.on('push-message', (message) => {
-      console.log('message', message)
-      const { style = 'success', title, content } = message
-      this.messages.push({ style, title, content })
-    })
   }
 }
 </script>

@@ -39,8 +39,9 @@ export default {
           if (res.data.success) {
             console.log(res)
             const { token, expired } = res.data
+            // 存取 token
             document.cookie = `hexToken=${token}; expires=${new Date(expired)}`
-            this.$router.push('/dashbord/products')
+            this.$router.push('/dashboard/products')
           }
         })
         .catch((err) => {
