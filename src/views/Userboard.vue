@@ -5,7 +5,7 @@
   </div>
 </template>
 <script>
-import Navbar from '../components/Navbar.vue'
+import Navbar from '../components/UserNav.vue'
 export default {
   name: 'userBoard',
   components: {

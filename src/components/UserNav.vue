@@ -6,8 +6,8 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <div class="navbar-nav">
-          <a href="#" @click.prevent="logout" class="nav-link">登出</a>
+        <div class="navbar-nav ml-auto">
+          <router-link to="/login" class="nav-link">管理員登入</router-link>
         </div>
       </div>
     </div>
@@ -30,3 +30,8 @@ export default {
   }
 }
 </script>
+<style>
+.ml-auto{
+  margin-left: auto;
+}
+</style>

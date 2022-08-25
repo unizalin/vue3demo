@@ -53,6 +53,12 @@
       <div class="text-end" v-if="order.is_paid === false">
         <button class="btn btn-danger">確認付款去</button>
       </div>
+      <div class="text-end" v-else>
+
+        <button class="btn btn-success">
+          <router-link to="/" class="text-white">回首頁</router-link>
+        </button>
+      </div>
     </form>
   </div>
 </template>
