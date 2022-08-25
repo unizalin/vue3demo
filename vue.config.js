@@ -5,5 +5,5 @@ module.exports = {
     disableHostCheck: true,
     proxy: 'http://localhost:8080',
   },  
-  publicPath: '/vue3demo/dist/'
+  publicPath: './'
 }
